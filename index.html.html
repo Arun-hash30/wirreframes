@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voilacode HRMS — Goals, Check-ins &amp; Performance Wireframes</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fff;
+    color: #000;
+    margin: 0;
+    padding: 30px;
+  }
+  h1.page-title {
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #000;
+    padding-bottom: 12px;
+    margin-bottom: 6px;
+  }
+  .subtitle { font-size: 13px; color: #444; margin-bottom: 24px; }
+
+  .tabs { display: flex; gap: 10px; margin-bottom: 26px; flex-wrap: wrap; }
+  .tab-btn {
+    border: 2px solid #000; background: #fff; color: #000;
+    font-weight: bold; font-size: 12px; letter-spacing: .5px;
+    padding: 10px 16px; cursor: pointer; text-transform: uppercase;
+  }
+  .tab-btn.active { background: #000; color: #fff; }
+  .screen-panel { display: none; }
+  .screen-panel.active { display: block; }
+  .screen-heading {
+    font-size: 15px; font-weight: bold; text-transform: uppercase;
+    border-left: 6px solid #000; padding-left: 10px; margin-bottom: 4px;
+  }
+  .screen-tag { font-size: 11px; color: #555; margin-bottom: 20px; margin-left: 16px; }
+
+  .view-label {
+    display: inline-block; background: #000; color: #fff;
+    font-size: 12px; font-weight: bold; letter-spacing: 1px;
+    padding: 5px 12px; margin-bottom: 12px; text-transform: uppercase;
+  }
+  .dim-tag { font-size: 10px; color: #ccc; margin-left: 8px; font-weight: normal; }
+  .frames-wrap { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 40px; }
+
+  .box { border: 2px solid #000; position: relative; padding: 8px; }
+  .box-label {
+    position: absolute; top: -11px; left: 10px; background: #fff;
+    padding: 0 6px; font-size: 10px; font-weight: bold; letter-spacing: .5px;
+    text-transform: uppercase; color: #000;
+  }
+  .placeholder-img {
+    background:
+      repeating-linear-gradient(45deg, #ccc 0 2px, #fff 2px 10px),
+      repeating-linear-gradient(-45deg, #ccc 0 2px, #fff 2px 10px);
+    background-blend-mode: multiply;
+    border: 2px dashed #999;
+    display: flex; align-items: center; justify-content: center;
+    color: #666; font-size: 11px; text-align: center;
+  }
+  .dashed { border: 2px dashed #000; }
+  .btn { border: 2px solid #000; text-align: center; padding: 6px 10px; font-size: 11px; font-weight: bold; background: #000; color: #fff; display: inline-block; }
+  .btn-outline { border: 2px solid #000; text-align: center; padding: 6px 10px; font-size: 11px; font-weight: bold; background: #fff; color: #000; display: inline-block; }
+  .btn-sm { padding: 4px 8px; font-size: 10px; }
+  .txt-line { background: #000; height: 8px; border-radius: 2px; }
+  .txt-block .txt-line { margin-bottom: 6px; }
+  .txt-block .txt-line.short { width: 55%; }
+  .txt-block .txt-line.med { width: 75%; }
+  .txt-block .txt-line.long { width: 100%; }
+  .grey-line { background:#bbb; }
+  .section-note { font-size: 10px; color: #555; font-style: italic; margin-top: 4px; }
+
+  .grid-2 { display: flex; gap: 10px; }
+  .grid-2 > div { flex: 1; }
+  .grid-3 { display: flex; gap: 8px; }
+  .grid-3 > div { flex: 1; }
+  .grid-4 { display: flex; gap: 8px; }
+  .grid-4 > div { flex: 1; }
+  .stack > div { margin-bottom: 8px; }
+
+  /* progress bar */
+  .progress-track { border: 2px solid #000; height: 12px; width: 100%; position: relative; background:#fff; }
+  .progress-fill { background:#000; height:100%; }
+  .progress-pct { font-size: 9px; font-weight:bold; margin-top:3px; }
+
+  /* pill / tag */
+  .pill { border:1px solid #000; border-radius:10px; font-size:9px; padding:2px 8px; display:inline-block; font-weight:bold; }
+  .pill.ghost { background:#fff; color:#000; }
+  .pill.filled { background:#000; color:#fff; }
+  .pill.flag { border-style:dashed; }
+
+  /* app shell */
+  .laptop-frame { width: 820px; border: 3px solid #000; padding: 0; position: relative; display:flex; }
+  .sidebar {
+    width: 150px; border-right: 2px solid #000; padding: 10px; flex-shrink:0;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .sidebar .side-item { font-size:10px; font-weight:bold; padding:7px 6px; border:1px solid transparent; }
+  .sidebar .side-item.active { border:2px solid #000; background:#000; color:#fff; }
+  .main-area { flex:1; min-width:0; }
+  .topbar {
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:2px solid #000; padding:10px 14px;
+  }
+  section.blk { border-top: 1px solid #000; padding: 12px; }
+  footer.blk { background: #f2f2f2; }
+
+  .mobile-frame { width: 300px; border: 3px solid #000; border-radius: 18px; padding: 10px 8px; position: relative; }
+  .mobile-notch { width: 55px; height: 8px; background: #000; border-radius: 4px; margin: 0 auto 8px auto; }
+  .bottom-nav { display:flex; justify-content:space-around; border-top:2px solid #000; padding-top:6px; margin-top:10px; }
+  .bottom-nav .nav-ico { font-size:14px; text-align:center; }
+  .bottom-nav .nav-lbl { font-size:7px; font-weight:bold; }
+
+  /* OKR tree */
+  .tree-wrap { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .tree-row { display:flex; gap:16px; justify-content:center; width:100%; }
+  .tree-node { border:2px solid #000; padding:8px 10px; font-size:10px; text-align:center; min-width:110px; }
+  .tree-connector { width:2px; background:#000; height:16px; margin:0 auto; }
+  .tree-node .pct { font-size:9px; font-weight:bold; margin-top:4px; }
+
+  .avatar { border-radius:50%; border:2px solid #000; display:flex; align-items:center; justify-content:center; font-size:12px; background:#fff; }
+  .comment-box { border:1px solid #000; padding:6px; font-size:9px; margin-top:6px; }
+
+  .legend { margin-top: 10px; border-top: 3px solid #000; padding-top: 16px; font-size: 12px; color: #333; }
+  .legend b { color: #000; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Voilacode HRMS — Goals, Check-ins &amp; Performance</h1>
+<div class="subtitle">Low-fidelity app wireframes (black &amp; white, boxes = content blocks) for internal review — layout language referenced from Weekdone (OKR progress bars, alignment tree, weekly check-in digest). This is a performance/OKR app shell, not a marketing site — sidebar nav + dashboard, shown in Laptop and Mobile.</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showPanel(1)">1. Dashboard</button>
+  <button class="tab-btn" onclick="showPanel(2)">2. OKRs &amp; Alignment Tree</button>
+  <button class="tab-btn" onclick="showPanel(3)">3. Weekly Check-in</button>
+  <button class="tab-btn" onclick="showPanel(4)">4. Tasks &amp; Proof of Work</button>
+  <button class="tab-btn" onclick="showPanel(5)">5. 1:1s &amp; Feedback</button>
+</div>
+
+<!-- ===================================================== -->
+<!-- SCREEN 1 — DASHBOARD -->
+<!-- ===================================================== -->
+<div class="screen-panel active" id="panel-1">
+  <div class="screen-heading">Screen 1 — Dashboard (Home)</div>
+  <div class="screen-tag">MVP+P2 · at-a-glance OKR progress, this week's tasks, check-in status, team pulse</div>
+
+  <div class="frames-wrap">
+    <!-- LAPTOP -->
+    <div>
+      <div class="view-label">Laptop <span class="dim-tag">1440px</span></div>
+      <div class="laptop-frame">
+        <div class="sidebar">
+          <div class="box dashed" style="height:30px; display:flex; align-items:center; justify-content:center; font-size:9px;">LOGO</div>
+          <div class="side-item active">🏠 Dashboard</div>
+          <div class="side-item">🎯 OKRs</div>
+          <div class="side-item">📅 Check-ins</div>
+          <div class="side-item">✅ Tasks</div>
+          <div class="side-item">🤝 1:1s</div>
+          <div class="side-item">💬 Feedback</div>
+          <div class="side-item">⭐ Reviews</div>
+          <div class="side-item">📊 Reports</div>
+        </div>
+        <div class="main-area">
+          <div class="topbar">
+            <span style="font-size:12px; font-weight:bold;">Good morning, Asha 👋</span>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="box dashed" style="padding:4px 10px; font-size:9px;">🔍 Search</div>
+              <div class="avatar" style="width:26px;height:26px;">A</div>
+            </div>
+          </div>
+
+          <section class="blk box grid-3">
+            <span class="box-label">Company OKR Progress</span>
+            <div><div class="txt-line short" style="height:7px;"></div><div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:68%;"></div></div><div class="progress-pct">68% · On track</div></div>
+            <div><div class="txt-line short" style="height:7px;"></div><div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:40%;"></div></div><div class="progress-pct">40% · At risk</div></div>
+            <div><div class="txt-line short" style="height:7px;"></div><div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:85%;"></div></div><div class="progress-pct">85% · On track</div></div>
+          </section>
+
+          <section class="blk box grid-2">
+            <span class="box-label">My Tasks This Week (with proof of work)</span>
+            <div class="stack">
+              <div class="box" style="padding:6px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="txt-line short" style="height:6px;"></div>
+                <span class="pill ghost">Due Wed</span>
+              </div>
+              <div class="box" style="padding:6px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="txt-line med grey-line" style="height:6px;"></div>
+                <span class="pill flag">⚠ Overdue — auto-flagged</span>
+              </div>
+              <div class="box" style="padding:6px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="txt-line short" style="height:6px;"></div>
+                <span class="pill filled">✔ Proof attached</span>
+              </div>
+            </div>
+            <div>
+              <span class="box-label" style="left:auto; right:10px;">Weekly Check-in Status</span>
+              <div class="stack" style="margin-top:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px;">Design team</span><span class="pill filled">Submitted</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px;">Engineering</span><span class="pill filled">Submitted</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:10px;">Sales</span><span class="pill ghost">Pending — 2 of 6</span></div>
+              </div>
+              <div class="btn-outline btn-sm" style="margin-top:8px;">SEND REMINDER</div>
+            </div>
+          </section>
+
+          <section class="blk box grid-3">
+            <span class="box-label">Team Pulse / KPIs</span>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:16px; font-weight:bold; margin-top:6px;">92%</div><div class="section-note">Task completion</div></div>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:16px; font-weight:bold; margin-top:6px;">4.3</div><div class="section-note">Avg KPI score</div></div>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:16px; font-weight:bold; margin-top:6px;">12</div><div class="section-note">Feedback notes this wk</div></div>
+          </section>
+
+          <footer class="blk box">
+            <span class="box-label">Upcoming</span>
+            <div class="grid-3">
+              <div class="section-note">📅 1:1 with manager — Thu 3pm</div>
+              <div class="section-note">📨 Monthly digest email — scheduled Fri</div>
+              <div class="section-note">⭐ Q4 review cycle opens in 5 days</div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div>
+      <div class="view-label">Mobile <span class="dim-tag">375px</span></div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <section class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="box-label">Top Bar</span>
+          <span style="font-size:10px; font-weight:bold;">Hi, Asha 👋</span>
+          <div class="avatar" style="width:22px;height:22px; font-size:10px;">A</div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">OKR Progress</span>
+          <div><div class="txt-line short" style="height:6px;"></div><div class="progress-track" style="margin-top:4px;"><div class="progress-fill" style="width:68%;"></div></div><div class="progress-pct">68%</div></div>
+          <div><div class="txt-line short" style="height:6px;"></div><div class="progress-track" style="margin-top:4px;"><div class="progress-fill" style="width:40%;"></div></div><div class="progress-pct">40% · At risk</div></div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">My Tasks</span>
+          <div class="box" style="padding:6px; display:flex; justify-content:space-between;"><div class="txt-line short" style="height:5px;"></div><span class="pill ghost">Wed</span></div>
+          <div class="box" style="padding:6px; display:flex; justify-content:space-between;"><div class="txt-line med grey-line" style="height:5px;"></div><span class="pill flag">⚠ Overdue</span></div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Check-in Status</span>
+          <div style="display:flex; justify-content:space-between;"><span style="font-size:9px;">Sales</span><span class="pill ghost">2 of 6</span></div>
+          <div class="btn-outline btn-sm" style="width:100%; margin-top:6px;">SEND REMINDER</div>
+        </section>
+
+        <div class="bottom-nav">
+          <div><div class="nav-ico">🏠</div><div class="nav-lbl">Home</div></div>
+          <div><div class="nav-ico">🎯</div><div class="nav-lbl">OKRs</div></div>
+          <div><div class="nav-ico">✅</div><div class="nav-lbl">Tasks</div></div>
+          <div><div class="nav-ico">🤝</div><div class="nav-lbl">1:1s</div></div>
+          <div><div class="nav-ico">⋯</div><div class="nav-lbl">More</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SCREEN 2 — OKRs & ALIGNMENT TREE -->
+<!-- ===================================================== -->
+<div class="screen-panel" id="panel-2">
+  <div class="screen-heading">Screen 2 — Objectives, Key Results &amp; Alignment Tree</div>
+  <div class="screen-tag">P2/P3 · company → team → individual OKRs with progress, visual hierarchy linking goals up and down</div>
+
+  <div class="frames-wrap">
+    <!-- LAPTOP -->
+    <div>
+      <div class="view-label">Laptop <span class="dim-tag">1440px</span></div>
+      <div class="laptop-frame">
+        <div class="sidebar">
+          <div class="box dashed" style="height:30px; display:flex; align-items:center; justify-content:center; font-size:9px;">LOGO</div>
+          <div class="side-item">🏠 Dashboard</div>
+          <div class="side-item active">🎯 OKRs</div>
+          <div class="side-item">📅 Check-ins</div>
+          <div class="side-item">✅ Tasks</div>
+          <div class="side-item">🤝 1:1s</div>
+        </div>
+        <div class="main-area">
+          <div class="topbar">
+            <span style="font-size:12px; font-weight:bold;">OKRs — Q4 2026</span>
+            <div style="display:flex; gap:8px;">
+              <div class="btn-outline btn-sm">VIEW: TREE</div>
+              <div class="btn btn-sm">+ NEW OKR</div>
+            </div>
+          </div>
+
+          <section class="blk box">
+            <span class="box-label">Alignment Tree (company → team → individual)</span>
+            <div class="tree-wrap" style="padding:12px 0;">
+              <div class="tree-node" style="font-weight:bold;">COMPANY OBJECTIVE<br><span class="pct">Grow ARR 30% · 68%</span></div>
+              <div class="tree-connector"></div>
+              <div class="tree-row">
+                <div class="tree-node">Team: Sales<div class="pct">KR 72%</div></div>
+                <div class="tree-node">Team: Product<div class="pct">KR 55%</div></div>
+                <div class="tree-node">Team: CS<div class="pct">KR 80%</div></div>
+              </div>
+              <div class="tree-row" style="gap:40px;">
+                <div class="tree-node" style="min-width:90px; font-size:9px;">Asha — Close 5 enterprise deals<div class="pct">60%</div></div>
+                <div class="tree-node" style="min-width:90px; font-size:9px;">Ravi — Ship v2 onboarding<div class="pct">45%</div></div>
+                <div class="tree-node" style="min-width:90px; font-size:9px;">Meera — Reduce churn 2%<div class="pct">80%</div></div>
+              </div>
+            </div>
+            <div class="section-note">Click any node to drill into that OKR's key results and linked tasks.</div>
+          </section>
+
+          <section class="blk box">
+            <span class="box-label">My OKRs — List View</span>
+            <div class="stack">
+              <div class="box" style="padding:8px;">
+                <div style="display:flex; justify-content:space-between;"><div class="txt-line med" style="height:7px;"></div><span class="pill ghost">Individual</span></div>
+                <div style="display:flex; gap:6px; margin-top:6px; align-items:center;"><span style="font-size:9px; width:90px;">KR1</span><div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div><span class="progress-pct">60%</span></div>
+                <div style="display:flex; gap:6px; margin-top:4px; align-items:center;"><span style="font-size:9px; width:90px;">KR2</span><div class="progress-track"><div class="progress-fill" style="width:35%;"></div></div><span class="progress-pct">35%</span></div>
+              </div>
+              <div class="box" style="padding:8px;">
+                <div style="display:flex; justify-content:space-between;"><div class="txt-line med grey-line" style="height:7px;"></div><span class="pill ghost">Team</span></div>
+                <div style="display:flex; gap:6px; margin-top:6px; align-items:center;"><span style="font-size:9px; width:90px;">KR1</span><div class="progress-track"><div class="progress-fill" style="width:80%;"></div></div><span class="progress-pct">80%</span></div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="blk box grid-3">
+            <span class="box-label">KPI Widgets (per person/team)</span>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:14px; font-weight:bold; margin-top:4px;">↑ 12%</div><div class="section-note">Target vs trend</div></div>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:14px; font-weight:bold; margin-top:4px;">↓ 3%</div><div class="section-note">Target vs trend</div></div>
+            <div class="box" style="padding:8px; text-align:center;"><div class="txt-line short" style="margin:0 auto; height:6px;"></div><div style="font-size:14px; font-weight:bold; margin-top:4px;">→ 0%</div><div class="section-note">Target vs trend</div></div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div>
+      <div class="view-label">Mobile <span class="dim-tag">375px</span></div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <section class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="box-label">Top Bar</span>
+          <span style="font-size:10px; font-weight:bold;">OKRs — Q4</span>
+          <div class="btn-sm btn">+ NEW</div>
+        </section>
+
+        <section class="box" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Alignment (tap to expand)</span>
+          <div class="tree-wrap">
+            <div class="tree-node" style="font-size:9px;">COMPANY<br><span class="pct">68%</span></div>
+            <div class="tree-connector" style="height:10px;"></div>
+            <div class="tree-row" style="gap:6px;">
+              <div class="tree-node" style="min-width:60px; font-size:8px;">Sales<div class="pct">72%</div></div>
+              <div class="tree-node" style="min-width:60px; font-size:8px;">Product<div class="pct">55%</div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">My OKRs</span>
+          <div class="box" style="padding:6px;">
+            <div class="txt-line med" style="height:6px;"></div>
+            <div style="display:flex; gap:6px; margin-top:6px; align-items:center;"><div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div><span class="progress-pct">60%</span></div>
+          </div>
+        </section>
+
+        <div class="bottom-nav">
+          <div><div class="nav-ico">🏠</div><div class="nav-lbl">Home</div></div>
+          <div><div class="nav-ico">🎯</div><div class="nav-lbl">OKRs</div></div>
+          <div><div class="nav-ico">✅</div><div class="nav-lbl">Tasks</div></div>
+          <div><div class="nav-ico">🤝</div><div class="nav-lbl">1:1s</div></div>
+          <div><div class="nav-ico">⋯</div><div class="nav-lbl">More</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SCREEN 3 — WEEKLY CHECK-IN -->
+<!-- ===================================================== -->
+<div class="screen-panel" id="panel-3">
+  <div class="screen-heading">Screen 3 — Weekly Plans, Progress &amp; Problems (Check-in)</div>
+  <div class="screen-tag">P2 · employee weekly report form + manager rollup view + automated digest emails</div>
+
+  <div class="frames-wrap">
+    <!-- LAPTOP -->
+    <div>
+      <div class="view-label">Laptop <span class="dim-tag">1440px</span></div>
+      <div class="laptop-frame">
+        <div class="sidebar">
+          <div class="box dashed" style="height:30px; display:flex; align-items:center; justify-content:center; font-size:9px;">LOGO</div>
+          <div class="side-item">🏠 Dashboard</div>
+          <div class="side-item">🎯 OKRs</div>
+          <div class="side-item active">📅 Check-ins</div>
+          <div class="side-item">✅ Tasks</div>
+          <div class="side-item">🤝 1:1s</div>
+        </div>
+        <div class="main-area">
+          <div class="topbar">
+            <span style="font-size:12px; font-weight:bold;">Weekly Check-in — Week 47</span>
+            <div class="btn btn-sm">SUBMIT</div>
+          </div>
+
+          <section class="blk box grid-2">
+            <span class="box-label">My Weekly Report (employee view)</span>
+            <div>
+              <div class="txt-line short" style="height:8px;"></div>
+              <div class="box dashed" style="margin-top:6px; padding:10px; height:60px; font-size:9px;">What did you plan last week? (auto-filled from last check-in)</div>
+              <div class="txt-line short" style="height:8px; margin-top:12px;"></div>
+              <div class="box dashed" style="margin-top:6px; padding:10px; height:60px; font-size:9px;">What did you accomplish?</div>
+            </div>
+            <div>
+              <div class="txt-line short" style="height:8px;"></div>
+              <div class="box dashed" style="margin-top:6px; padding:10px; height:60px; font-size:9px;">What are you planning next week?</div>
+              <div class="txt-line short" style="height:8px; margin-top:12px;"></div>
+              <div class="box dashed" style="margin-top:6px; padding:10px; height:60px; font-size:9px;">⚠ Any problems / blockers?</div>
+            </div>
+          </section>
+
+          <section class="blk box">
+            <span class="box-label">Manager Rollup — Team: Design (6 reports)</span>
+            <div class="stack">
+              <div class="box" style="padding:8px; display:flex; align-items:center; gap:10px;">
+                <div class="avatar" style="width:26px;height:26px; font-size:11px;">M</div>
+                <div style="flex:1;"><div class="txt-line short" style="height:6px;"></div><div class="txt-line long grey-line" style="height:4px; margin-top:4px;"></div></div>
+                <span class="pill filled">Submitted</span>
+              </div>
+              <div class="box" style="padding:8px; display:flex; align-items:center; gap:10px;">
+                <div class="avatar" style="width:26px;height:26px; font-size:11px;">R</div>
+                <div style="flex:1;"><div class="txt-line short" style="height:6px;"></div><div class="txt-line long grey-line" style="height:4px; margin-top:4px;"></div></div>
+                <span class="pill flag">⚠ Blocker flagged</span>
+              </div>
+              <div class="box" style="padding:8px; display:flex; align-items:center; gap:10px;">
+                <div class="avatar" style="width:26px;height:26px; font-size:11px;">S</div>
+                <div style="flex:1; opacity:.5;"><div class="txt-line short grey-line" style="height:6px;"></div></div>
+                <span class="pill ghost">Not submitted</span>
+              </div>
+            </div>
+          </section>
+
+          <footer class="blk box grid-2">
+            <span class="box-label">Automated Reminders &amp; Digest</span>
+            <div class="section-note">📨 Fri 5pm — reminder to non-submitters</div>
+            <div class="section-note">📬 Mon 8am — manager digest email, auto-sent</div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div>
+      <div class="view-label">Mobile <span class="dim-tag">375px</span></div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <section class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="box-label">Top Bar</span>
+          <span style="font-size:10px; font-weight:bold;">Check-in Wk 47</span>
+          <div class="btn-sm btn">SUBMIT</div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">My Report</span>
+          <div class="box dashed" style="padding:8px; height:44px; font-size:8px;">Accomplished this week...</div>
+          <div class="box dashed" style="padding:8px; height:44px; font-size:8px;">Planning next week...</div>
+          <div class="box dashed" style="padding:8px; height:36px; font-size:8px;">⚠ Blockers...</div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Team Rollup</span>
+          <div class="box" style="padding:6px; display:flex; align-items:center; gap:8px;">
+            <div class="avatar" style="width:20px;height:20px; font-size:9px;">R</div>
+            <div class="txt-line short" style="flex:1; height:5px;"></div>
+            <span class="pill flag" style="font-size:8px;">⚠</span>
+          </div>
+        </section>
+
+        <div class="bottom-nav">
+          <div><div class="nav-ico">🏠</div><div class="nav-lbl">Home</div></div>
+          <div><div class="nav-ico">🎯</div><div class="nav-lbl">OKRs</div></div>
+          <div><div class="nav-ico">📅</div><div class="nav-lbl">Check-in</div></div>
+          <div><div class="nav-ico">🤝</div><div class="nav-lbl">1:1s</div></div>
+          <div><div class="nav-ico">⋯</div><div class="nav-lbl">More</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SCREEN 4 — TASKS & PROOF OF WORK -->
+<!-- ===================================================== -->
+<div class="screen-panel" id="panel-4">
+  <div class="screen-heading">Screen 4 — Tasks with Deadlines &amp; Proof of Work</div>
+  <div class="screen-tag">MVP · screenshot proof, review, auto-flag on delay — this is the highest-priority screen for the US launch</div>
+
+  <div class="frames-wrap">
+    <!-- LAPTOP -->
+    <div>
+      <div class="view-label">Laptop <span class="dim-tag">1440px</span></div>
+      <div class="laptop-frame">
+        <div class="sidebar">
+          <div class="box dashed" style="height:30px; display:flex; align-items:center; justify-content:center; font-size:9px;">LOGO</div>
+          <div class="side-item">🏠 Dashboard</div>
+          <div class="side-item">🎯 OKRs</div>
+          <div class="side-item">📅 Check-ins</div>
+          <div class="side-item active">✅ Tasks</div>
+          <div class="side-item">🤝 1:1s</div>
+        </div>
+        <div class="main-area">
+          <div class="topbar">
+            <span style="font-size:12px; font-weight:bold;">Tasks — Board View</span>
+            <div style="display:flex; gap:8px;">
+              <div class="btn-outline btn-sm">VIEW: LIST</div>
+              <div class="btn btn-sm">+ NEW TASK</div>
+            </div>
+          </div>
+
+          <section class="blk box grid-3">
+            <span class="box-label">Board (To do / In progress / Done — with proof)</span>
+            <div class="stack">
+              <div class="section-note" style="font-weight:bold;">TO DO</div>
+              <div class="box" style="padding:8px;"><div class="txt-line short" style="height:6px;"></div><span class="pill ghost" style="margin-top:6px; display:inline-block;">Due Fri</span></div>
+              <div class="box" style="padding:8px;"><div class="txt-line med grey-line" style="height:6px;"></div><span class="pill flag" style="margin-top:6px; display:inline-block;">⚠ Overdue</span></div>
+            </div>
+            <div class="stack">
+              <div class="section-note" style="font-weight:bold;">IN PROGRESS</div>
+              <div class="box" style="padding:8px;"><div class="txt-line short" style="height:6px;"></div><div class="placeholder-img" style="height:40px; margin-top:6px; font-size:8px;">Screenshot proof uploaded</div></div>
+            </div>
+            <div class="stack">
+              <div class="section-note" style="font-weight:bold;">DONE</div>
+              <div class="box" style="padding:8px;"><div class="txt-line short" style="height:6px;"></div><div class="placeholder-img" style="height:40px; margin-top:6px; font-size:8px;">✔ Proof verified</div><span class="pill filled" style="margin-top:6px; display:inline-block;">Reviewed by manager</span></div>
+            </div>
+          </section>
+
+          <section class="blk box">
+            <span class="box-label">Task Detail — Proof of Work Review</span>
+            <div class="grid-2">
+              <div>
+                <div class="txt-line med" style="height:8px;"></div>
+                <div class="txt-line long grey-line" style="margin-top:8px; height:5px;"></div>
+                <div class="txt-line long grey-line" style="height:5px; margin-top:4px;"></div>
+                <div style="margin-top:10px; display:flex; gap:10px; font-size:10px;"><span>Assignee: <b>Ravi</b></span><span>Due: <b>Nov 28</b></span><span class="pill flag">Auto-flagged: 2 days late</span></div>
+              </div>
+              <div>
+                <div class="placeholder-img" style="height:100px;">Screenshot proof thumbnail</div>
+                <div style="margin-top:8px; display:flex; gap:8px;">
+                  <div class="btn btn-sm">✔ APPROVE</div>
+                  <div class="btn-outline btn-sm">↩ REQUEST REDO</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="blk box">
+            <span class="box-label">Auto-flag Rules</span>
+            <div class="section-note">⚠ Flags apply automatically when a task passes its deadline with no proof attached — manager notified, employee nudged.</div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div>
+      <div class="view-label">Mobile <span class="dim-tag">375px</span></div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <section class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="box-label">Top Bar</span>
+          <span style="font-size:10px; font-weight:bold;">Tasks</span>
+          <div class="btn-sm btn">+ NEW</div>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">My Tasks</span>
+          <div class="box" style="padding:6px;"><div class="txt-line short" style="height:5px;"></div><span class="pill flag" style="margin-top:4px; display:inline-block;">⚠ Overdue</span></div>
+          <div class="box" style="padding:6px;"><div class="txt-line short" style="height:5px;"></div><div class="btn-outline btn-sm" style="width:100%; margin-top:6px;">📷 ATTACH PROOF</div></div>
+        </section>
+
+        <section class="box" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Task Detail</span>
+          <div class="placeholder-img" style="height:70px;">Proof thumbnail</div>
+          <div style="display:flex; gap:6px; margin-top:6px;">
+            <div class="btn btn-sm" style="flex:1;">✔ APPROVE</div>
+            <div class="btn-outline btn-sm" style="flex:1;">↩ REDO</div>
+          </div>
+        </section>
+
+        <div class="bottom-nav">
+          <div><div class="nav-ico">🏠</div><div class="nav-lbl">Home</div></div>
+          <div><div class="nav-ico">🎯</div><div class="nav-lbl">OKRs</div></div>
+          <div><div class="nav-ico">✅</div><div class="nav-lbl">Tasks</div></div>
+          <div><div class="nav-ico">🤝</div><div class="nav-lbl">1:1s</div></div>
+          <div><div class="nav-ico">⋯</div><div class="nav-lbl">More</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SCREEN 5 — 1:1s & FEEDBACK -->
+<!-- ===================================================== -->
+<div class="screen-panel" id="panel-5">
+  <div class="screen-heading">Screen 5 — Private 1:1s &amp; Continuous Feedback</div>
+  <div class="screen-tag">P2 · 1:1 agenda/notes/action items (private to the pair) + request-or-give feedback anytime, comment on updates</div>
+
+  <div class="frames-wrap">
+    <!-- LAPTOP -->
+    <div>
+      <div class="view-label">Laptop <span class="dim-tag">1440px</span></div>
+      <div class="laptop-frame">
+        <div class="sidebar">
+          <div class="box dashed" style="height:30px; display:flex; align-items:center; justify-content:center; font-size:9px;">LOGO</div>
+          <div class="side-item">🏠 Dashboard</div>
+          <div class="side-item">🎯 OKRs</div>
+          <div class="side-item">📅 Check-ins</div>
+          <div class="side-item">✅ Tasks</div>
+          <div class="side-item active">🤝 1:1s</div>
+          <div class="side-item">💬 Feedback</div>
+        </div>
+        <div class="main-area">
+          <div class="topbar">
+            <span style="font-size:12px; font-weight:bold;">1:1 — You &amp; Manager (Priya)</span>
+            <span class="pill ghost">🔒 Private to this pair</span>
+          </div>
+
+          <section class="blk box grid-2">
+            <span class="box-label">Shared Agenda (editable by both)</span>
+            <div>
+              <div class="box" style="padding:8px; display:flex; align-items:center; gap:8px;"><input type="checkbox" disabled><div class="txt-line short" style="height:6px;"></div></div>
+              <div class="box" style="padding:8px; display:flex; align-items:center; gap:8px; margin-top:6px;"><input type="checkbox" disabled checked><div class="txt-line med grey-line" style="height:6px;"></div></div>
+              <div class="btn-outline btn-sm" style="margin-top:8px;">+ ADD AGENDA ITEM</div>
+            </div>
+            <div>
+              <span class="box-label" style="left:auto; right:10px;">Private Notes</span>
+              <div class="box dashed" style="padding:10px; height:80px; font-size:9px; margin-top:4px;">Notes only visible to the two participants...</div>
+            </div>
+          </section>
+
+          <section class="blk box">
+            <span class="box-label">Action Items</span>
+            <div class="stack">
+              <div class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;"><div class="txt-line short" style="height:6px;"></div><span class="pill ghost">Owner: Ravi · Due Dec 1</span></div>
+              <div class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;"><div class="txt-line med grey-line" style="height:6px;"></div><span class="pill ghost">Owner: Priya · Due Dec 3</span></div>
+            </div>
+          </section>
+
+          <footer class="blk box">
+            <span class="box-label">Continuous Feedback Feed</span>
+            <div class="grid-2">
+              <div class="box" style="padding:8px;">
+                <div style="display:flex; gap:6px; align-items:center;"><div class="avatar" style="width:22px;height:22px; font-size:10px;">M</div><span style="font-size:9px; font-weight:bold;">gave feedback on</span></div>
+                <div class="txt-line med grey-line" style="height:5px; margin-top:6px;"></div>
+                <div class="comment-box">"Great job on the client demo..." — <i>trimmed</i></div>
+              </div>
+              <div style="text-align:right; align-self:center;">
+                <div class="btn btn-sm">+ REQUEST FEEDBACK</div>
+                <div class="btn-outline btn-sm" style="margin-top:6px;">+ GIVE FEEDBACK</div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE -->
+    <div>
+      <div class="view-label">Mobile <span class="dim-tag">375px</span></div>
+      <div class="mobile-frame">
+        <div class="mobile-notch"></div>
+        <section class="box" style="padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="box-label">Top Bar</span>
+          <span style="font-size:10px; font-weight:bold;">1:1 — Priya</span>
+          <span class="pill ghost" style="font-size:8px;">🔒</span>
+        </section>
+
+        <section class="box stack" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Agenda</span>
+          <div class="box" style="padding:6px; display:flex; gap:6px; align-items:center;"><input type="checkbox" disabled><div class="txt-line short" style="height:5px;"></div></div>
+          <div class="btn-outline btn-sm" style="width:100%;">+ ADD ITEM</div>
+        </section>
+
+        <section class="box" style="margin-top:12px; padding:8px;">
+          <span class="box-label">Feedback Feed</span>
+          <div class="comment-box">"Great job on the client demo..."</div>
+          <div style="display:flex; gap:6px; margin-top:6px;">
+            <div class="btn btn-sm" style="flex:1;">+ REQUEST</div>
+            <div class="btn-outline btn-sm" style="flex:1;">+ GIVE</div>
+          </div>
+        </section>
+
+        <div class="bottom-nav">
+          <div><div class="nav-ico">🏠</div><div class="nav-lbl">Home</div></div>
+          <div><div class="nav-ico">🎯</div><div class="nav-lbl">OKRs</div></div>
+          <div><div class="nav-ico">✅</div><div class="nav-lbl">Tasks</div></div>
+          <div><div class="nav-ico">🤝</div><div class="nav-lbl">1:1s</div></div>
+          <div><div class="nav-ico">⋯</div><div class="nav-lbl">More</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <b>How to read this:</b><br>
+  • Solid boxes = content blocks/cards. Dashed boxes = images, screenshots, free-text inputs.<br>
+  • Progress bars + "%" = OKR / KR completion, styled after Weekdone's progress-first dashboards.<br>
+  • Pills = status tags (Submitted / Overdue / Auto-flagged / Private). Avatars = team member references.<br>
+  • Left sidebar is the persistent app nav (Dashboard, OKRs, Check-ins, Tasks, 1:1s, Feedback, Reviews, Reports) — mirrors Weekdone's left-rail IA rather than a marketing top-nav.<br>
+  • Tabs above switch between the 5 core screens; each shown in Laptop (sidebar + content) and Mobile (bottom tab bar).<br>
+  • Phase/priority per feature (MVP, P2, P3) is called out in each screen's subtitle, matching the feature table.
+</div>
+
+<script>
+  function showPanel(n) {
+    document.querySelectorAll('.screen-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('panel-' + n).classList.add('active');
+    document.querySelectorAll('.tab-btn')[n-1].classList.add('active');
+  }
+</script>
+
+</body>
+</html>
